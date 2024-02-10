@@ -1,6 +1,9 @@
 import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import axios from "axios";
 import style from "./SignIn.module.css";
 const SignIn = () => {
+  const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
@@ -8,13 +11,17 @@ const SignIn = () => {
     e.preventDefault();
     const user = { email, password };
     try {
-      const response = await fetch("http://localhost:3000/api/login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(user),
-      });
-      const data = await response.json();
-      console.log(data);
+      const response = await axios.post(
+        "http://localhost:3000/api/signin",
+        user,
+        {
+          withCredentials: true,
+        }
+      );
+      console.log(response.data);
+      setTimeout(() => {
+        navigate("/");
+      }, 1000);
     } catch (error) {
       console.log(error);
     }
@@ -26,11 +33,13 @@ const SignIn = () => {
     <>
       <div className={style.container}>
         <h6 className={style.hading}>Sign In</h6>
-        <p className={style.para}>Enter your credentials to access your account</p>
+        <p className={style.para}>
+          Enter your credentials to access your account
+        </p>
         <form className={style.container} action="">
           <label htmlFor="email">Email</label>
           <input
-          className={style.input}
+            className={style.input}
             type="email"
             name="email"
             id="email"
@@ -41,7 +50,7 @@ const SignIn = () => {
           />
           <label htmlFor="password">Password</label>
           <input
-          className={style.input}
+            className={style.input}
             type="password"
             name="password"
             id="password"
@@ -53,6 +62,12 @@ const SignIn = () => {
           <button type="submit" onClick={handleSubmit}>
             Sign In
           </button>
+          <div>
+            <span>
+              {/*  eslint-disable-next-line react/no-unescaped-entities */}
+              Don't have an account? <Link to={"/signup"}>Sign Up</Link>
+            </span>
+          </div>
         </form>
       </div>
     </>
