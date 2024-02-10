@@ -25,11 +25,12 @@ const SignIn = () => {
   return (
     <>
       <div className={style.container}>
-        <h6>Sign In</h6>
-        <p>Enter your credentials to access your account</p>
+        <h6 className={style.hading}>Sign In</h6>
+        <p className={style.para}>Enter your credentials to access your account</p>
         <form className={style.container} action="">
           <label htmlFor="email">Email</label>
           <input
+          className={style.input}
             type="email"
             name="email"
             id="email"
@@ -40,6 +41,7 @@ const SignIn = () => {
           />
           <label htmlFor="password">Password</label>
           <input
+          className={style.input}
             type="password"
             name="password"
             id="password"

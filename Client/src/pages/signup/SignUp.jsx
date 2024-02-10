@@ -26,7 +26,7 @@ const SignUp = () => {
     return (
       <>
         <div className={style.container}>
-          <h6>Register</h6>
+          <h6 className={style.hading}>Register</h6>
           <form className={style.container}>
             <label htmlFor="username">Username</label>
             <input
