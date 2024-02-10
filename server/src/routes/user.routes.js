@@ -3,7 +3,7 @@ import express from "express";
 
 const route = express.Router();
 
-route.post("/register", createUser);
-route.post("/login", loginUser);
+route.post("/signup", createUser);
+route.post("/signin", loginUser);
 
 export default route;
