@@ -12,13 +12,13 @@ const SignIn = () => {
     const user = { email, password };
     try {
       const response = await axios.post(
-        "http://localhost:3000/api/signin",
-        user,
+        "http://localhost:4000/api/signin", user,
         {
           withCredentials: true,
         }
-      );
+      )
       console.log(response.data);
+      localStorage.setItem("token", response.data.token);
       setTimeout(() => {
         navigate("/");
       }, 1000);
@@ -36,7 +36,7 @@ const SignIn = () => {
         <p className={style.para}>
           Enter your credentials to access your account
         </p>
-        <form className={style.container} action="">
+        <form className={style.container} action="POST">
           <label htmlFor="email">Email</label>
           <input
             className={style.input}

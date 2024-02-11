@@ -1,48 +1,65 @@
-import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { useCookies } from "react-cookie";
 import axios from "axios";
-import { ToastContainer, toast } from "react-toastify";
+import { useEffect, useState } from "react";
+import { useNavigate, Link } from "react-router-dom";
 
 const Home = () => {
   const navigate = useNavigate();
-  const [cookies, removeCookie] = useCookies([]);
   const [username, setUsername] = useState("");
-  useEffect(() => {
-    const verifyCookie = async () => {
-      console.log(cookies);
-      if (!cookies.token) {
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+
+  const userVerify = async () => {
+    // Perform user verification
+    if(!localStorage.getItem("token")){
+      navigate("/signin");
+    }
+    try {
+      const res = await axios.get("http://localhost:4000/api/verify", {
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+        withCredentials: true,
+      });
+
+      const { data } = res;
+      if (res.status === 200) {
+        setUsername(data.name);
+        setIsAuthenticated(true);
+      } else {
         navigate("/signin");
+        const error = new Error(res.error);
+        throw error;
       }
-      const { data } = await axios.get(
-        "http://localhost:3000/",
-        {},
-        { withCredentials: true }
-      );
-      const { status, user } = data;
-      setUsername(user);
-      return status
-        ? toast(`Hello ${user}`, {
-            position: "top-right",
-          })
-        : (removeCookie("token"), navigate("/signin"));
-    };
-    verifyCookie();
+    } catch (error) {
+      console.log(error);
+      navigate("/signin"); // Redirect to signin on error
+    }
+  };
+
+  useEffect(() => {
+    userVerify();
   }, []);
+
   const Logout = () => {
-    removeCookie("token");
+    // Clear authentication state (e.g., remove token from local storage)
+    localStorage.removeItem("token"); // Assuming token is stored in local storage
+    setIsAuthenticated(false);
     navigate("/signin");
   };
+
   return (
     <>
-      <div className="home_page">
-        <h4>
-          {" "}
-          Welcome <span>{username}</span>
-        </h4>
-        <button onClick={Logout}>LOGOUT</button>
-      </div>
-      <ToastContainer />
+      {isAuthenticated ? (
+        <div className="home_page">
+          <h4>Welcome <span>{username}</span></h4>
+          <button onClick={Logout}>LOGOUT</button>
+        </div>
+      ) : (
+        // Redirect to signin if not authenticated
+        <>
+        <h4>Please <Link to="/signin">Login</Link></h4>
+        </>
+      )}
     </>
   );
 };

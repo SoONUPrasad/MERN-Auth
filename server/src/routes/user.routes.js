@@ -7,7 +7,7 @@ const route = express.Router();
 route.post("/signup", createUser);
 route.post("/signin", loginUser);
 route.get("/verify", authMiddleware, (req, res) => {
-    res.send("Everything is fine");
+    res.send(req.user);
 })
 
 export default route;

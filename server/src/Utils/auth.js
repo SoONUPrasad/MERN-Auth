@@ -1,8 +1,9 @@
 import Jwt from "jsonwebtoken";
 
-const JWT_SECRET ="$$SONU@123$$";
+const JWT_SECRET = process.env.SECRET_KEY;
 
 const generateToken = (user) => {
+    // console.log(user)
     const payload = {
         _id: user._id,
         name: user.name,
